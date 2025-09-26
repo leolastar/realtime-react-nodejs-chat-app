@@ -18,7 +18,7 @@ dotenv.config();
 
 console.log("process.env.CLIENT_URL", process.env.CLIENT_URL);
 
-const app = express();
+export const app = express();
 const httpServer = new Server(app);
 const io = new SocketIOServer(httpServer, {
   cors: { origin: "*", credentials: true },

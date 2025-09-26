@@ -102,7 +102,6 @@ export default function Chat() {
           Logout
         </Button>
       </Grid>
-
       <Grid>
         {conversations.length > 0 ? (
           <ul>

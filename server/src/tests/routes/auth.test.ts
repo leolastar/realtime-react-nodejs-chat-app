@@ -1,17 +1,32 @@
 import request from "supertest";
-import { app } from "./../../app";
-import { describe, test, expect } from "mocha";
+import { app } from "../../app";
+import { sequelize } from "../../config/database";
+import { beforeAll, describe, expect, it, afterAll } from "mocha";
 
-describe("POST /api/signup", () => {
-  test("creates a user and returns a JWT", async () => {
-    const res = await request(app).post("/api/signup").send({
-      firstName: "Alice",
-      lastName: "Smith",
-      email: "alice@example.com",
+beforeAll(async () => {
+  await sequelize.sync({ force: true });
+});
+
+describe("Auth routes", () => {
+  it("signup -> 201", async () => {
+    const res = await request(app).post("/api/auth/signup").send({
+      firstName: "John",
+      lastName: "Doe",
+      email: "john@example.com",
       password: "secret123",
     });
-
-    expect(res.statusCode).toBe(200);
-    expect(res.body.token).toBeDefined();
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty("token");
   });
+
+  it("login -> 200", async () => {
+    const res = await request(app)
+      .post("/api/auth/login")
+      .send({ email: "john@example.com", password: "secret123" });
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("token");
+  });
+});
+afterAll(async () => {
+  await sequelize.close();
 });
