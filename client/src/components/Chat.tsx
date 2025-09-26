@@ -18,7 +18,7 @@ import { useAuth } from "../api/AuthContext";
 import { Conversation, User } from "../types/commonTypes";
 
 export default function Chat() {
-  const { token, user } = useAuth();
+  const { token, user, logout } = useAuth();
   const [conversations, setConversations] = useState<any[]>([]);
   const [allusers, setAllusers] = useState<any[]>([]);
   const navigate = useNavigate();
@@ -88,24 +88,37 @@ export default function Chat() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         padding: "20px",
       }}
     >
-      <Typography variant="h2">Your Conversations</Typography>
-      {conversations.length > 0 ? (
-        <ul>
-          {conversations.map((conver: any) => (
-            <li key={conver.id}>
-              <Link to={`/chat/${conver?.conversation?.id}`}>
-                {conver?.conversation?.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <Typography variant="h4">No conversations found</Typography>
-      )}
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Typography variant="h2">Your Conversations</Typography>
+        <Button variant="contained" color="primary" onClick={() => logout()}>
+          Logout
+        </Button>
+      </Grid>
+
+      <Grid>
+        {conversations.length > 0 ? (
+          <ul>
+            {conversations.map((conver: any) => (
+              <li key={conver.id}>
+                <Link to={`/chat/${conver?.conversation?.id}`}>
+                  {conver?.conversation?.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Typography variant="h4">No conversations found</Typography>
+        )}
+      </Grid>
+
       <Grid
         sx={{
           width: "100%",
